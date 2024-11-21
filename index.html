@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 *{
-  font-size: 36px;
+  font-size: 32px;
 }
 body{
   max-width: 800px;
@@ -29,7 +29,7 @@ div>*{
 </head>
 <body>
 <button id="open">Select video file</button>
-<video playsinline controls></video>
+<video playsinline></video>
 <div>
 <button id="play">▶️</button>
 <select><option selected>x0.1<option>x0.2<option>x0.5<option>x1</select>
@@ -39,11 +39,12 @@ div>*{
 <script>
 var isJP = navigator.language === 'ja';
 var file = document.createElement('input');
+var video = document.querySelector('video');
 file.type = 'file';
+file.accept = 'video/mpeg,video/mp4,video/webm,video/ogg,video/quicktime,video/x-msvideo'.split(',').filter(type => !!video.canPlayType(type)).join(',');
 var openButton = document.getElementById('open');
 openButton.onclick = () => file.click();
 var playButton = document.getElementById('play');
-var video = document.querySelector('video');
 video.onplay = () => playButton.textContent = '⏸️';
 video.onpause = () => playButton.textContent = '▶️';
 video.onerror = () => alert(isJP ? '非対応のファイル' : 'Unsupported file');
@@ -60,8 +61,10 @@ speed.onchange();
 document.getElementById('back').onclick = document.getElementById('next').onclick = event => {
   video.pause();
   video.currentTime = video.currentTime + (event.target.textContent === '→' ? 1 : -1) / 15;
+  event.preventDefault();
 };
 if (isJP) {
+  document.documentElement.lang = 'ja';
   document.title = 'Webコマ送りプレイヤー';
   openButton.textContent = '動画ファイルを開く';
 }
