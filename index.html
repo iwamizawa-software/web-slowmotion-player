@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web slow-motion player</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{
+  font-size: 36px;
+}
+body{
+  max-width: 800px;
+  margin: 0 auto;
+}
+body>*{
+  width: 100%;
+}
+video{
+  display: block;
+  max-height: 60vh;
+}
+div{
+  display: flex;
+}
+div>*{
+  flex-grow: 1;
+}
+</style>
+</head>
+<body>
+<button id="open">Select video file</button>
+<video playsinline controls></video>
+<div>
+<button id="play">▶️</button>
+<select><option selected>x0.1<option>x0.2<option>x0.5<option>x1</select>
+<button id="back">←</button>
+<button id="next">→</button>
+</div>
+<script>
+var isJP = navigator.language === 'ja';
+var file = document.createElement('input');
+file.type = 'file';
+var openButton = document.getElementById('open');
+openButton.onclick = () => file.click();
+var playButton = document.getElementById('play');
+var video = document.querySelector('video');
+video.onplay = () => playButton.textContent = '⏸️';
+video.onpause = () => playButton.textContent = '▶️';
+video.onerror = () => alert(isJP ? '非対応のファイル' : 'Unsupported file');
+playButton.onclick = () => video[video.paused ? 'play' : 'pause']();
+file.onchange = event => {
+  if (video.src)
+    URL.revokeObjectURL(video.src);
+  video.src = URL.createObjectURL(file.files[0]);
+  file.value = '';
+};
+var speed = document.querySelector('select');
+speed.onchange = () => video.defaultPlaybackRate = video.playbackRate = speed.selectedOptions[0]?.value.slice(1);
+speed.onchange();
+document.getElementById('back').onclick = document.getElementById('next').onclick = event => {
+  video.pause();
+  video.currentTime = video.currentTime + (event.target.textContent === '→' ? 1 : -1) / 15;
+};
+if (isJP) {
+  document.title = 'Webコマ送りプレイヤー';
+  openButton.textContent = '動画ファイルを開く';
+}
+</script>
+</body>
+</html>
