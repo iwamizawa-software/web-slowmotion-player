@@ -41,7 +41,7 @@ var isJP = navigator.language === 'ja';
 var file = document.createElement('input');
 var video = document.querySelector('video');
 file.type = 'file';
-file.accept = 'video/mpeg,video/mp4,video/webm,video/ogg,video/quicktime,video/x-msvideo'.split(',').filter(type => !!video.canPlayType(type)).join(',');
+file.accept = 'video/mpeg,video/mp4,video/webm,video/ogg,video/quicktime,video/x-msvideo'.split(',').filter(type => !!video.canPlayType(type)).concat('.mov').join(',');
 var openButton = document.getElementById('open');
 openButton.onclick = () => file.click();
 var playButton = document.getElementById('play');
