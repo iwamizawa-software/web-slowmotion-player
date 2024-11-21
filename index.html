@@ -53,6 +53,7 @@ file.onchange = event => {
   if (video.src)
     URL.revokeObjectURL(video.src);
   video.src = URL.createObjectURL(file.files[0]);
+  video.play();
   file.value = '';
 };
 var speed = document.querySelector('select');
